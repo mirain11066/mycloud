@@ -116,7 +116,7 @@ const upload = multer({
 // ファイル一覧
 app.get('/api/files', authMiddleware, (req, res) => {
   try {
-    const dir = safePath(req.query.dir || '');
+    const dir = safePath(req.query.path || req.query.dir || '');
     if (!fs.existsSync(dir)) return res.json({ files: [], currentDir: '' });
     const entries = fs.readdirSync(dir, { withFileTypes: true });
     const files = entries
@@ -126,16 +126,16 @@ app.get('/api/files', authMiddleware, (req, res) => {
         const stats = fs.statSync(fullPath);
         return {
           name: entry.name,
-          path: path.relative(STORAGE, fullPath),
-          type: entry.isDirectory() ? 'folder' : 'file',
+          path: path.relative(STORAGE, fullPath).replace(/\\/g, '/'),
+          type: entry.isDirectory() ? 'directory' : 'file',
           size: entry.isDirectory() ? null : stats.size,
           modified: stats.mtime,
           ext: entry.isDirectory() ? null : path.extname(entry.name).toLowerCase().slice(1),
         };
       })
       .sort((a, b) => {
-        if (a.type === 'folder' && b.type !== 'folder') return -1;
-        if (a.type !== 'folder' && b.type === 'folder') return 1;
+        if (a.type === 'directory' && b.type !== 'directory') return -1;
+        if (a.type !== 'directory' && b.type === 'directory') return 1;
         return a.name.localeCompare(b.name);
       });
     res.json({ currentDir: path.relative(STORAGE, dir) || '', files });
@@ -143,6 +143,7 @@ app.get('/api/files', authMiddleware, (req, res) => {
     res.status(400).json({ error: e.message });
   }
 });
+
 
 // ストレージ情報
 app.get('/api/storage-info', authMiddleware, (req, res) => {
