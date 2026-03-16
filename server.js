@@ -64,7 +64,7 @@ app.post('/api/login', (req, res) => {
   if (password !== PASSWORD) return res.status(401).json({ error: 'Wrong password' });
   const token = jwt.sign({ user: 'owner' }, SECRET, { expiresIn: '7d' });
   res.cookie('token', token, { httpOnly: true, sameSite: 'strict', maxAge: 7 * 86400000 });
-  res.json({ success: true });
+  res.json({ success: true, token: token })
 });
 
 app.post('/api/logout', (req, res) => {
