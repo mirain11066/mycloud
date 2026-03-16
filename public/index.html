@@ -512,6 +512,7 @@ async function login() {
       document.getElementById('loginOverlay').style.display = 'none';
       document.getElementById('app').style.display = 'flex';
       document.getElementById('fabUpload').style.display = '';
+           new Audio('/api/preview?path=' + encodeURIComponent('ウェルカムメッセージ.wav') + '&token=' + token).play();
       loadFiles();
       loadStorageInfo();
     } else {
@@ -542,6 +543,7 @@ function authHeaders() {
       if (res.ok) {
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('app').style.display = 'flex';
+        new Audio('/api/preview?path=' + encodeURIComponent('ウェルカムメッセージ.wav') + '&token=' + token).play();
         loadFiles();
         loadStorageInfo();
         return;
