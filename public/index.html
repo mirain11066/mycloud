@@ -512,7 +512,7 @@ async function login() {
       document.getElementById('loginOverlay').style.display = 'none';
       document.getElementById('app').style.display = 'flex';
       document.getElementById('fabUpload').style.display = '';
-           new Audio('/api/preview?path=' + encodeURIComponent('ウェルカムメッセージ.wav') + '&token=' + token).play();
+             new Audio('/api/preview?path=' + encodeURIComponent('ウェルカムメッセージ.wav') + '&token=' + token).play().catch(()=>{});
       loadFiles();
       loadStorageInfo();
     } else {
@@ -543,7 +543,7 @@ function authHeaders() {
       if (res.ok) {
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('app').style.display = 'flex';
-        new Audio('/api/preview?path=' + encodeURIComponent('ウェルカムメッセージ.wav') + '&token=' + token).play();
+               new Audio('/api/preview?path=' + encodeURIComponent('ウェルカムメッセージ.wav') + '&token=' + token).play().catch(()=>{});
         loadFiles();
         loadStorageInfo();
         return;
@@ -715,7 +715,7 @@ async function uploadFiles() {
 
   bar.style.width = '100%';
   text.textContent = `完了！ ${completed}件成功` + (failed ? ` / ${failed}件失敗` : '');
-  try { new Audio('/アップロード完了.wav').play(); } catch(e) {}
+  try { new Audio('/api/preview?path=' + encodeURIComponent('アップロード完了.wav') + '&token=' + token).play(); } catch(e) {}
   setTimeout(() => prog.classList.remove('active'), 2000);
   loadFiles();
   loadStorageInfo();
