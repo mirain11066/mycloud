@@ -186,15 +186,19 @@ app.get('/api/upload-status', authMiddleware, (req, res) => {
 });
 
 // フォルダ作成
-app.post('/api/mkdir', authMiddleware, (req, res) => {
+app.post('/api/mkdir', authMiddleware, express.json(), (req, res) => {
   try {
-    const dir = safePath(req.body.path);
-    fs.mkdirSync(dir, { recursive: true });
+    const folderName = req.body.name;
+    if (!folderName) return res.status(400).json({ error: 'Name required' });
+    const parentPath = req.body.path || '';
+    const fullPath = safePath(parentPath ? parentPath + '/' + folderName : folderName);
+    fs.mkdirSync(fullPath, { recursive: true });
     res.json({ success: true });
   } catch (e) {
     res.status(400).json({ error: e.message });
   }
 });
+
 
 // ダウンロード
 app.get('/api/download', authMiddleware, (req, res) => {
