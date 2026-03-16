@@ -159,13 +159,14 @@ app.get('/api/storage-info', authMiddleware, (req, res) => {
 
 // アップロード（キュー制御付き・1ファイルずつ受付）
 app.post('/api/upload', authMiddleware, queueMiddleware, (req, res) => {
-  upload.array('files', 100)(req, res, (err) => {
+  upload.single('file')(req, res, (err) => {
     releaseUpload();
     if (err) {
       console.error('Upload error:', err.message);
       return res.status(500).json({ error: err.message });
     }
-    res.json({ success: true, count: req.files.length });
+    if (!req.file) return res.status(400).json({ error: 'No file' });
+    res.json({ success: true, name: req.file.originalname });
   });
 });
 
