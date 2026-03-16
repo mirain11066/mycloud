@@ -679,7 +679,7 @@ async function uploadFiles() {
       form.append('file', file);
       if (currentPath) form.append('path', currentPath);
       const xhr = new XMLHttpRequest();
-      xhr.open('POST', '/api/upload');
+           xhr.open('POST', '/api/upload' + (currentPath ? '?path=' + encodeURIComponent(currentPath) : ''));
       xhr.setRequestHeader('X-Auth-Token', token);
       xhr.upload.onprogress = e => {
         if (e.lengthComputable) {
