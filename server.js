@@ -98,11 +98,10 @@ function getDirectorySize(dirPath) {
 // ── Multer設定（ストリーム書き込み） ──
 const upload = multer({
   storage: multer.diskStorage({
-       destination: (req, _file, cb) => {
-          const dir = safePath(req.query.dir || req.query.path || req.body.path || '');
+    destination: (req, _file, cb) => {
+      const dir = safePath(req.query.dir || req.query.path || req.body.path || '');
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
       cb(null, dir);
-    },
     },
     filename: (_req, file, cb) => {
       const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8');
